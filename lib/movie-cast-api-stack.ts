@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { MovieCastTable } from './constructs/movie-cast-table';
 import { MovieCastSeeder } from './constructs/movie-cast-seeder';
+import { MovieCastApi } from './constructs/movie-cast-api';
 
 export class MovieCastApiStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -9,5 +10,9 @@ export class MovieCastApiStack extends cdk.Stack {
 
     const movieCastTable = new MovieCastTable(this, 'MovieCastTable');
     new MovieCastSeeder(this, 'MovieCastSeeder', movieCastTable.table);
+
+    const movieCastApi = new MovieCastApi(this, 'MovieCastApi', { table: movieCastTable.table });
+
+    new cdk.CfnOutput(this, 'ApiUrl', { value: movieCastApi.api.url });
   }
 }
