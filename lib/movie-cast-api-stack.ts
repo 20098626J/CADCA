@@ -14,9 +14,16 @@ export class MovieCastApiStack extends cdk.Stack {
 
     const authApi = new AuthApi(this, 'AuthApi');
 
-    const movieCastApi = new MovieCastApi(this, 'MovieCastApi', { table: movieCastTable.table });
+    const movieCastApi = new MovieCastApi(this, 'MovieCastApi', {
+      table: movieCastTable.table,
+      userPool: authApi.userPool,
+    });
 
     new cdk.CfnOutput(this, 'ApiUrl', { value: movieCastApi.api.url });
+    new cdk.CfnOutput(this, 'AdminApiKeyId', {
+      value: movieCastApi.adminApiKey.keyId,
+      description: 'Retrieve the key value: aws apigateway get-api-key --api-key <id> --include-value',
+    });
     new cdk.CfnOutput(this, 'AuthApiUrl', { value: authApi.api.url });
     new cdk.CfnOutput(this, 'UserPoolId', { value: authApi.userPool.userPoolId });
     new cdk.CfnOutput(this, 'UserPoolClientId', {
