@@ -4,6 +4,7 @@ import { MovieCastTable } from './constructs/movie-cast-table';
 import { MovieCastSeeder } from './constructs/movie-cast-seeder';
 import { MovieCastApi } from './constructs/movie-cast-api';
 import { AuthApi } from './constructs/auth-api';
+import { StateChangeLogger } from './constructs/state-change-logger';
 
 export class MovieCastApiStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -11,6 +12,8 @@ export class MovieCastApiStack extends cdk.Stack {
 
     const movieCastTable = new MovieCastTable(this, 'MovieCastTable');
     new MovieCastSeeder(this, 'MovieCastSeeder', movieCastTable.table);
+
+    new StateChangeLogger(this, 'StateChangeLogger', movieCastTable.table);
 
     const authApi = new AuthApi(this, 'AuthApi');
 
